@@ -1,0 +1,13 @@
+company,product_id,description,row_id,normalised_description,brand,product_type,watts,capacity_kg,size_in,colour,canonical_id
+A,A1001,Philips LED Bulb 50 Watt Warm White,A:A1001,philips led bulb 50 w warm white,philips,bulb,50.0,,,warm white,P00001
+A,A200,Samsung TV 55 inch UHD,A:A200,samsung tv 55 inch uhd,samsung,tv,,,55.0,,P00002
+A,A300,Acme USB C Charger 65W Black,A:A300,acme usb c charger 65w black,acme,charger,65.0,,,black,P00003
+B,B7811,LED Bulb 50W Philips Warm White,B:B7811,led bulb 50w philips warm white,philips,bulb,50.0,,,warm white,P00001
+B,B999,Samsung 55 inch Ultra HD Television,B:B999,samsung 55 inch ultra hd television,samsung,tv,,,55.0,,P00005
+B,B300,Acme 65 Watt USB-C Fast Charger Black,B:B300,acme 65 w usb c fast charger black,acme,charger,65.0,,,black,P00004
+C,C991,Philips Warm White LED Lamp 50W,C:C991,philips warm white led lamp 50w,philips,bulb,50.0,,,warm white,P00008
+C,C401,LG Washing Machine 8KG Front Load,C:C401,lg washing machine 8kg front load,lg,washing_machine,,8.0,,,P00007
+C,C300,Acme USB C charger 45W black,C:C300,acme usb c charger 45w black,acme,charger,45.0,,,black,P00006
+D,D555,Warm White 50 Watt LED Bulb by Philips,D:D555,warm white 50 w led bulb by philips,philips,bulb,50.0,,,warm white,P00001
+D,D876,LG Front Load Washer 8 Kg,D:D876,lg front load washer 8 kg,lg,washing_machine,,8.0,,,P00010
+D,D300,Generic USB C charger 65W black,D:D300,generic usb c charger 65w black,,charger,65.0,,,black,P00009

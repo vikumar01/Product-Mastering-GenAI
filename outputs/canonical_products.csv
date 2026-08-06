@@ -1,0 +1,11 @@
+canonical_id,canonical_description,brand,product_type,member_count,source_companies
+P00001,Warm White 50 Watt LED Bulb by Philips,philips,bulb,3,"A,B,D"
+P00002,Samsung TV 55 inch UHD,samsung,tv,1,A
+P00003,Acme USB C Charger 65W Black,acme,charger,1,A
+P00004,Acme 65 Watt USB-C Fast Charger Black,acme,charger,1,B
+P00005,Samsung 55 inch Ultra HD Television,samsung,tv,1,B
+P00006,Acme USB C charger 45W black,acme,charger,1,C
+P00007,LG Washing Machine 8KG Front Load,lg,washing_machine,1,C
+P00008,Philips Warm White LED Lamp 50W,philips,bulb,1,C
+P00009,Generic USB C charger 65W black,,charger,1,D
+P00010,LG Front Load Washer 8 Kg,lg,washing_machine,1,D

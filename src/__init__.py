@@ -1,0 +1,1 @@
+"""Auditable product-resolution pipeline."""

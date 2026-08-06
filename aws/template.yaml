@@ -1,0 +1,80 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Product resolution with Bedrock, OpenSearch Serverless and Step Functions.
+
+Parameters:
+  OpenSearchEndpoint: { Type: String, Description: 'https://<collection-id>.<region>.aoss.amazonaws.com' }
+  OpenSearchIndex: { Type: String, Default: products-v1 }
+  ClaudeModelId: { Type: String, Description: 'Current Claude model or inference-profile ID from Bedrock catalog' }
+  EmbeddingModelId: { Type: String, Default: amazon.titan-embed-text-v2:0 }
+  DbClusterArn: { Type: String, Default: '' }
+  DbSecretArn: { Type: String, Default: '' }
+  DbName: { Type: String, Default: productmaster }
+
+Resources:
+  RawBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketEncryption: { ServerSideEncryptionConfiguration: [{ ServerSideEncryptionByDefault: { SSEAlgorithm: AES256 } }] }
+  AuditBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketEncryption: { ServerSideEncryptionConfiguration: [{ ServerSideEncryptionByDefault: { SSEAlgorithm: AES256 } }] }
+  ResolverFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: handlers.resolve_products.lambda_handler
+      Runtime: python3.12
+      Timeout: 900
+      MemorySize: 2048
+      Environment:
+        Variables:
+          OPENSEARCH_ENDPOINT: !Ref OpenSearchEndpoint
+          OPENSEARCH_INDEX: !Ref OpenSearchIndex
+          CLAUDE_MODEL_ID: !Ref ClaudeModelId
+          EMBEDDING_MODEL_ID: !Ref EmbeddingModelId
+          AUDIT_BUCKET: !Ref AuditBucket
+          DB_CLUSTER_ARN: !Ref DbClusterArn
+          DB_SECRET_ARN: !Ref DbSecretArn
+          DB_NAME: !Ref DbName
+      Policies:
+        - S3ReadPolicy: { BucketName: !Ref RawBucket }
+        - S3WritePolicy: { BucketName: !Ref AuditBucket }
+        - Statement:
+          - Effect: Allow
+            Action: [bedrock:InvokeModel, bedrock:Converse, aoss:APIAccessAll, rds-data:ExecuteStatement, secretsmanager:GetSecretValue]
+            Resource: '*'
+  ResolutionWorkflow:
+    Type: AWS::Serverless::StateMachine
+    Properties:
+      Definition:
+        StartAt: ResolveProducts
+        States:
+          ResolveProducts:
+            Type: Task
+            Resource: !GetAtt ResolverFunction.Arn
+            End: true
+      Policies:
+        - LambdaInvokePolicy: { FunctionName: !Ref ResolverFunction }
+  StartWorkflowFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: handlers.start_execution.lambda_handler
+      Runtime: python3.12
+      Environment: { Variables: { STATE_MACHINE_ARN: !Ref ResolutionWorkflow } }
+      Policies:
+        - StepFunctionsExecutionPolicy: { StateMachineName: !GetAtt ResolutionWorkflow.Name }
+      Events:
+        NewCsv:
+          Type: S3
+          Properties:
+            Bucket: !Ref RawBucket
+            Events: s3:ObjectCreated:*
+            Filter: { S3Key: { Rules: [{ Name: suffix, Value: .csv }] } }
+
+Outputs:
+  RawBucketName: { Value: !Ref RawBucket }
+  AuditBucketName: { Value: !Ref AuditBucket }
+  WorkflowArn: { Value: !Ref ResolutionWorkflow }

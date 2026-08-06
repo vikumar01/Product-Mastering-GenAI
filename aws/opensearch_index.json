@@ -1,0 +1,13 @@
+{
+  "settings": { "index.knn": true },
+  "mappings": { "properties": {
+    "source_row_id": { "type": "keyword" }, "company": { "type": "keyword" },
+    "product_id": { "type": "keyword" }, "canonical_id": { "type": "keyword" },
+    "normalised_description": { "type": "text" }, "brand": { "type": "keyword" },
+    "product_type": { "type": "keyword" }, "watts": { "type": "float" },
+    "capacity_kg": { "type": "float" }, "size_in": { "type": "float" },
+    "colour": { "type": "keyword" },
+    "embedding": { "type": "knn_vector", "dimension": 1024,
+      "method": { "name": "hnsw", "space_type": "cosinesimil", "engine": "faiss" } }
+  }}
+}

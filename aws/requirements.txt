@@ -1,0 +1,3 @@
+boto3>=1.34
+opensearch-py>=2.5
+requests>=2.31
